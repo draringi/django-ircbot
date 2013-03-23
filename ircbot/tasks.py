@@ -1,12 +1,13 @@
 from celery import task
 from irc import client
-from mariabot.models import Bot
+from ircbot.models import Bot
 
 @task(track_started = True)
 def ircbot(bot):
     bot = Bot.objects.get(nick = bot)
     clnt = client.IRC()
     serv = clnt.server()
+    set_commands(
     serv.connect(bot.server.server, bot.server.port, bot.nick)
     if bot.nick_pass:
         serv.privmsg("nickserv", "identify "+bot.nick_pass)
